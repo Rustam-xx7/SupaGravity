@@ -22,7 +22,7 @@ function App() {
     editorRef.current = editor;
 
     // monacobinding monaco editor ko yjs ke sath bind karke realtime canges ko track karta hai .
-     new MonacoBinding(
+    new MonacoBinding(
       yText,
       editorRef.current.getModel(),
       new Set([editorRef.current]),
@@ -45,7 +45,6 @@ function App() {
 
   //useEffect ko use karke yjs monaco sab ko connect karne ka kaam karenge .
   useEffect(() => {
-
     console.log("userName", userName);
     if (userName) {
       const provider = new SocketIOProvider(
@@ -59,21 +58,19 @@ function App() {
 
       provider.awareness.setLocalStateField("user", { userName }); // ek user nam ka field create kar rahe hai awareness mein .
 
-
-      
-
-
-
-      provider.awareness.on("change", () => {
+      const syncUserList = () => {
         const states = Array.from(provider.awareness.getStates().values());
 
         console.log("User states:", states);
         setUserList(
           states
-            .filter((state) => state.user && state.user.userName)
-            .map((state) => state.user || { userName: "Anonymous" }),
+            .filter((state) => state?.user?.userName)
+            .map((state) => ({ userName: state.user.userName })),
         ); // jitne bhi users hai unko set kar denge userList mein
-      });
+      };
+
+      provider.awareness.on("change", syncUserList);
+      syncUserList();
 
       function handleBeforeUnload() {
         provider.awareness.setLocalStateField("user", null); // jab user disconnect hoga to uska state null kar denge
@@ -82,11 +79,12 @@ function App() {
       window.addEventListener("beforeunload", handleBeforeUnload);
 
       return () => {
+        provider.awareness.off("change", syncUserList);
         provider.disconnect();
         window.removeEventListener("beforeunload", handleBeforeUnload);
       };
     }
-  }, [userName]);
+  }, [userName, ydoc]);
 
   if (!userName) {
     return (
@@ -113,12 +111,12 @@ function App() {
   }
   return (
     <main className="App h-screen w-full bg-slate-950 flex gap-4 p-4">
-      <aside className="h-full w-1/4 bg-amber-50 rounded-lg">
+      <aside className="h-full w-1/4 bg-amber-50 rounded-lg overflow-y-hidden">
         <h2 className="text-lg font-bold text-gray-950 p-4">Users</h2>
         <ul className="p-4">
           {userList.map((state, index) => (
-            <li key={index} className="text-gray-950">
-              {state.user?.userName || "Anonymous"}
+            <li key={index} className="bg-gray-950 text-amber-50 p-2 rounded-lg mb-2">
+              {state.userName || "Anonymous"}
             </li>
           ))}
         </ul>
