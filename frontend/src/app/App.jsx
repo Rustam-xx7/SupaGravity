@@ -48,7 +48,7 @@ function App() {
     console.log("userName", userName);
     if (userName) {
       const provider = new SocketIOProvider(
-        "http://localhost:3000",
+        "/",
         "monaco",
         ydoc,
         { autoConnect: true },
@@ -71,7 +71,7 @@ function App() {
 
       provider.awareness.on("change", syncUserList);
       syncUserList();
-
+    
       function handleBeforeUnload() {
         provider.awareness.setLocalStateField("user", null); // jab user disconnect hoga to uska state null kar denge
       }
