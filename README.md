@@ -29,6 +29,7 @@ Multiple users will be able to join the same session, edit code together in real
 
 ## 📂 Project Structure
 
+```
 SupaGravity/
 ├── backend/
 │   ├── public/                  # Built frontend served by Express (static assets)
@@ -38,7 +39,7 @@ SupaGravity/
 │   │   ├── favicon.svg
 │   │   ├── icons.svg
 │   │   └── index.html
-│   ├── server.js                 # Express server + Yjs sync/WebSocket logic
+│   ├── server.js                # Express server + Yjs sync/WebSocket logic
 │   ├── package.json
 │   └── .gitignore
 │
@@ -48,17 +49,18 @@ SupaGravity/
 │   │   └── icons.svg
 │   ├── src/
 │   │   ├── app/
-│   │   │   ├── App.jsx            # Root React component (Monaco + Yjs editor UI)
+│   │   │   ├── App.jsx           # Root React component (Monaco + Yjs editor UI)
 │   │   │   └── App.css
-│   │   └── main.jsx                # React app entry point
-│   ├── vite.config.js               # Vite bundler config
+│   │   └── main.jsx              # React app entry point
+│   ├── vite.config.js            # Vite bundler config
 │   ├── eslint.config.js
 │   ├── package.json
 │   └── .gitignore
 │
-├── dockerfile                       # Docker build configuration
+├── dockerfile                    # Docker build configuration
 ├── .dockerignore
 └── README.md
+```
 > `backend/public/` currently holds the production-built frontend bundle served statically by Express. As the project grows, this may be replaced by a proper reverse-proxy/dev-server setup.
 
 ---
